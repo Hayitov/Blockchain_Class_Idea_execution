@@ -1,14 +1,22 @@
-import { SignIn } from "./auth/SignIn";
-import { useSession } from "./auth/useSession";
-import { Profile } from "./pages/Profile";
-import styles from "./styles/App.module.css";
+import { Navigate, Route, Routes } from "react-router-dom";
+
+import { ProtectedRoute } from "./auth/ProtectedRoute";
+import { SignInPage } from "./pages/SignInPage";
+import { ProfilePage } from "./pages/ProfilePage";
 
 export function App() {
-  const { data, isLoading } = useSession();
-
-  if (isLoading) {
-    return <div className={styles.appShell}>Loading…</div>;
-  }
-
-  return <div className={styles.appShell}>{data ? <Profile /> : <SignIn />}</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<SignInPage />} />
+      <Route
+        path="/me"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
