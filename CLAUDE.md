@@ -23,8 +23,9 @@ assignment end-to-end as a working demo: Assignment 2 — Ethernaut.
 ## Tech Stack (do NOT substitute)
 - **Backend**: Python 3.11, FastAPI, SQLAlchemy 2.x, Alembic, PostgreSQL 16,
   web3.py (Sepolia RPC).
-- **Frontend**: React 18 + Vite + TypeScript, wagmi v2 + viem (SIWE),
-  TanStack Query, plain CSS modules. No Tailwind.
+- **Frontend**: React 18 + Vite + TypeScript, **Tailwind CSS** (v3),
+  **React Router v6**, **lucide-react** for icons. wagmi v2 + viem for
+  SIWE, TanStack Query for server state.
 - **Local infra**: no Docker. Postgres 16 runs on the host (e.g. Postgres.app
   or `brew services start postgresql@16`). FastAPI and Vite also on the host.
   Quickstart: `make db-create` → `make migrate` → `make seed-map` →
@@ -43,14 +44,22 @@ assignment end-to-end as a working demo: Assignment 2 — Ethernaut.
 
 ## Project Layout
 ```
-/backend     FastAPI app, alembic migrations, graders/, scripts/
-/frontend    Vite + React app
-/docs        architecture notes, per-assignment grader specs
-Makefile     db-create / migrate / seed-map / seed-dev / api / web / test
-CLAUDE.md    this file
-README.md    run instructions
-.env.example checked in; .env gitignored
+/backend          FastAPI app, alembic migrations, graders/, scripts/
+  .env            (gitignored)
+  .env.example    (checked in)
+/frontend         Vite + React app, Tailwind, React Router
+  .env            (gitignored)
+  .env.example    (checked in)
+/docs             architecture notes, per-assignment grader specs
+Makefile          db-create / migrate / seed-map / seed-dev / api / web / test
+CLAUDE.md         this file
+README.md         run instructions
 ```
+
+## Env files
+Each side owns its own env file. There is **no project-root `.env`**.
+- `backend/.env` — `DATABASE_URL`, `SEPOLIA_RPC_URL`, SIWE/cookie/session settings.
+- `frontend/.env` — Vite-prefixed vars (`VITE_*`) only. The browser only ever sees `VITE_*`, never the backend's.
 
 ## Out of Scope (Phase 1)
 - LLM / Claude judge integration

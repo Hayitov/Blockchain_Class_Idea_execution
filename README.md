@@ -31,8 +31,9 @@ See `docs/grader_assignment_2_ethernaut.md` for the grader algorithm.
 ## Quickstart
 
 ```bash
-cp .env.example .env
-# Edit .env: paste your Alchemy key into SEPOLIA_RPC_URL.
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+# Edit backend/.env: paste your Alchemy key into SEPOLIA_RPC_URL.
 # The backend refuses to boot without it — there is no public-RPC fallback.
 
 make install        # backend venv + frontend npm
