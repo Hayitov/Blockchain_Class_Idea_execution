@@ -1,0 +1,40 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Node
+node_modules/
+.vite/
+.eslintcache
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend build
+frontend/dist/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Alembic local overrides — keep migrations tracked, ignore caches
+backend/.alembic.cache
