@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routes import health
 from app.settings import settings
 
 
@@ -15,8 +16,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Routes mounted under /api so the frontend Vite proxy can forward cleanly.
-    # Health endpoint and feature routers are added in subsequent steps.
+    app.include_router(health.router)
 
     return app
 
