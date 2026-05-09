@@ -1,0 +1,68 @@
+.page {
+  max-width: 48rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+}
+
+.address {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  color: #8a91a0;
+  margin: 0;
+  word-break: break-all;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #b8bdc9;
+  border: 1px solid #2f343f;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  background: #262a33;
+}
+
+.notice {
+  background: #2a2218;
+  border: 1px solid #4a3a1f;
+  color: #e0c787;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.assignmentList {
+  background: #1a1d24;
+  border: 1px solid #262a33;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.assignmentList h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.placeholder {
+  color: #8a91a0;
+  font-size: 0.9rem;
+  margin: 0;
+}
