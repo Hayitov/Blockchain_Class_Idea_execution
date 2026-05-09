@@ -35,3 +35,28 @@ export type Me = {
 };
 
 export type Nonce = { nonce: string; issued_at: string };
+
+export type Assignment = {
+  id: number;
+  code: string;
+  title: string;
+  weight: number;
+};
+
+export type GraderRun = {
+  id: number;
+  submission_id: number;
+  status: "ok" | "error";
+  score: number | null;
+  details_json: Record<string, unknown>;
+  created_at: string;
+};
+
+export type Submission = {
+  id: number;
+  student_id: number;
+  assignment_id: number;
+  assignment_code: string;
+  created_at: string;
+  runs: GraderRun[];
+};

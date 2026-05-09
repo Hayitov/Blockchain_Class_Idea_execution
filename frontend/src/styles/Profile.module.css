@@ -63,6 +63,69 @@
 
 .placeholder {
   color: #8a91a0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin: 0;
+}
+
+.assignmentRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid #262a33;
+}
+
+.assignmentRow:first-of-type {
+  border-top: none;
+}
+
+.assignmentTitle {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.primaryButton {
+  background: #4f8cff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: #3d7cf2;
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.historyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-top: 1px solid #262a33;
+  font-size: 0.9rem;
+}
+
+.historyRow:first-of-type {
+  border-top: none;
+}
+
+.historyScore {
+  text-align: right;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.error {
+  color: #ff7676;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0 0;
 }

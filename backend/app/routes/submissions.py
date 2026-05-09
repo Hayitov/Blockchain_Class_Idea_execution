@@ -1,0 +1,101 @@
+"""Submission + grader-run endpoints.
+
+Privacy invariant: every endpoint here resolves the student row from the
+session cookie via `current_student`. Path/query params NEVER carry a
+student id, so cross-student access is structurally impossible.
+
+The actual Ethernaut grader is wired in the next step. For now `_run_grader`
+returns a placeholder so the UI flow can be exercised end-to-end.
+"""
+from __future__ import annotations
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.db import get_db
+from app.deps import current_student
+from app.graders.base import GraderResult
+from app.models import Assignment, GraderRun, Student, Submission
+from app.schemas import GraderRunOut, SubmissionOut
+
+router = APIRouter(prefix="/api", tags=["submissions"])
+
+
+def _run_grader_stub(_assignment: Assignment, _student: Student) -> GraderResult:
+    """Placeholder. Replaced by app.graders.ethernaut.run in the next step."""
+    return GraderResult(
+        status="ok",
+        score=0,
+        details={"stub": True, "note": "real grader wired in next step"},
+    )
+
+
+@router.post("/assignments/{code}/submit", response_model=GraderRunOut)
+def submit_assignment(
+    code: str,
+    student: Student = Depends(current_student),
+    db: Session = Depends(get_db),
+) -> GraderRunOut:
+    assignment = db.scalar(select(Assignment).where(Assignment.code == code))
+    if assignment is None:
+        raise HTTPException(status_code=404, detail=f"unknown assignment '{code}'")
+
+    submission = Submission(
+        student_id=student.id,
+        assignment_id=assignment.id,
+        payload_json={},
+    )
+    db.add(submission)
+    db.flush()  # populate submission.id without committing yet
+
+    # Dispatch by code so the grader registry stays explicit and easy to grep.
+    if code == "assignment_2_ethernaut":
+        result = _run_grader_stub(assignment, student)
+    else:
+        result = GraderResult(
+            status="error",
+            score=None,
+            details={"error": f"no grader registered for '{code}'"},
+        )
+
+    run = GraderRun(
+        submission_id=submission.id,
+        status=result.status,
+        score=result.score,
+        details_json=result.details,
+    )
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+    return GraderRunOut.model_validate(run)
+
+
+@router.get("/me/submissions", response_model=list[SubmissionOut])
+def my_submissions(
+    assignment_code: str | None = None,
+    student: Student = Depends(current_student),
+    db: Session = Depends(get_db),
+) -> list[SubmissionOut]:
+    stmt = (
+        select(Submission, Assignment.code)
+        .join(Assignment, Assignment.id == Submission.assignment_id)
+        .where(Submission.student_id == student.id)
+        .order_by(Submission.created_at.desc())
+    )
+    if assignment_code is not None:
+        stmt = stmt.where(Assignment.code == assignment_code)
+
+    out: list[SubmissionOut] = []
+    for sub, code in db.execute(stmt).all():
+        out.append(
+            SubmissionOut(
+                id=sub.id,
+                student_id=sub.student_id,
+                assignment_id=sub.assignment_id,
+                assignment_code=code,
+                created_at=sub.created_at,
+                runs=[GraderRunOut.model_validate(r) for r in sub.runs],
+            )
+        )
+    return out
