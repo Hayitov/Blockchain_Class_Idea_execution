@@ -15,20 +15,12 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.deps import current_student
+from app.graders import ethernaut as ethernaut_grader
 from app.graders.base import GraderResult
 from app.models import Assignment, GraderRun, Student, Submission
 from app.schemas import GraderRunOut, SubmissionOut
 
 router = APIRouter(prefix="/api", tags=["submissions"])
-
-
-def _run_grader_stub(_assignment: Assignment, _student: Student) -> GraderResult:
-    """Placeholder. Replaced by app.graders.ethernaut.run in the next step."""
-    return GraderResult(
-        status="ok",
-        score=0,
-        details={"stub": True, "note": "real grader wired in next step"},
-    )
 
 
 @router.post("/assignments/{code}/submit", response_model=GraderRunOut)
@@ -51,7 +43,7 @@ def submit_assignment(
 
     # Dispatch by code so the grader registry stays explicit and easy to grep.
     if code == "assignment_2_ethernaut":
-        result = _run_grader_stub(assignment, student)
+        result = ethernaut_grader.run(assignment.config_json, student.eth_address)
     else:
         result = GraderResult(
             status="error",
