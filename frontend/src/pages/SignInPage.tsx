@@ -20,7 +20,7 @@ export function SignInPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Already signed in -> bounce to /me. Hooks must run before this redirect.
+  // Hooks must run before any conditional render, so handle the redirect here.
   useEffect(() => {
     if (me) navigate("/me", { replace: true });
   }, [me, navigate]);

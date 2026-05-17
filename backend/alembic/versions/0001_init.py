@@ -1,9 +1,5 @@
 """init: students, assignments, auth_nonces, sessions, submissions, grader_runs
 
-Schema-only migration. No data is seeded here — students live in
-backend/scripts/seed_dev_data.py and the assignment config_json is
-populated by backend/scripts/seed_ethernaut_map.py.
-
 Revision ID: 0001_init
 Revises:
 Create Date: 2026-05-09

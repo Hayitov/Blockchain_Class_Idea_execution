@@ -23,7 +23,6 @@ from app.settings import settings
 
 
 def make_nonce() -> str:
-    """secrets.token_urlsafe(32) — high-entropy, URL-safe, server-issued."""
     return secrets.token_urlsafe(32)
 
 
@@ -41,11 +40,8 @@ class SiweError(ValueError):
 
 
 def parse_and_verify(raw_message: str, signature: str) -> ParsedSiwe:
-    """Parse the EIP-4361 message, verify the signature, and check domain
-    + freshness. Returns the parsed fields. Raises SiweError on any failure.
-
-    Note: nonce equality with our DB-issued nonce is checked in the route
-    handler under the same transaction that consumes the nonce.
+    """Verify signature + domain + freshness. Nonce equality is checked in the
+    route handler under the same transaction that consumes the nonce row.
     """
     try:
         msg = SiweMessage.from_message(message=raw_message)

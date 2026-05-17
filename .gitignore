@@ -47,3 +47,6 @@ frontend/vite.config.d.ts
 
 # Alembic local overrides — keep migrations tracked, ignore caches
 backend/.alembic.cache
+
+# Original gradebook exports (student PII) — never commit
+*.xlsx

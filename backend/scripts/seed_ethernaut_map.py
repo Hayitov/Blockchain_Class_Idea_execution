@@ -1,26 +1,10 @@
-"""Seed (or re-seed) the Ethernaut assignment row's `config_json`.
+"""Fetch the OpenZeppelin Ethernaut gamedata + Sepolia deploy map and write
+them into `assignments.config_json` for code='assignment_2_ethernaut'. Idempotent.
 
-Source of truth is the OpenZeppelin Ethernaut repository on GitHub. We fetch
-two files from the master branch each time this script runs:
-
-  - client/src/gamedata/gamedata.json       (level metadata, including difficulty)
-  - client/src/gamedata/deploy.sepolia.json (level address per deployId)
-
-For each Sepolia level we compute:
-
-    score = min(int(difficulty), 5)
-
-The cap exists because the CS423 syllabus defines complexity on a 0-5 scale.
-The official Ethernaut difficulty rating goes up to 7; capping keeps the
-numbers comparable to other assignments graded by the same rubric.
-
-The result is written into `assignments.config_json` for the row with
-code='assignment_2_ethernaut'. The grader reads this at runtime and never
-hardcodes scores. To override an individual level's score, edit
-`config_json.level_scores` in Postgres directly — DO NOT redeploy.
-
-Idempotent: re-running this updates the same assignment row, refreshing
-the level map and the `source.fetched_at` timestamp.
+Level score = min(int(difficulty), 5): the CS423 syllabus defines complexity
+on a 0-5 scale, while official Ethernaut difficulty goes up to 7. To override
+an individual level's score, edit `config_json.level_scores` in Postgres —
+DO NOT redeploy.
 """
 from __future__ import annotations
 
@@ -45,10 +29,10 @@ DEPLOY_URL = (
 
 ASSIGNMENT_CODE = "assignment_2_ethernaut"
 ASSIGNMENT_TITLE = "Assignment 2 — Ethernaut"
-ASSIGNMENT_WEIGHT = 10  # points contributed to the course total; tunable in DB
+ASSIGNMENT_WEIGHT = 10
 
-# Conservative lower bound for log scanning. The OZ Ethernaut proxy was deployed
-# on Sepolia well after this block, so paginated eth_getLogs from here is safe.
+# OZ Ethernaut on Sepolia was deployed well after this block, so paginated
+# eth_getLogs from here is a safe lower bound.
 FROM_BLOCK_DEFAULT = 4_000_000
 
 CAP_RULE = "min(int(difficulty), 5)"

@@ -1,24 +1,7 @@
-"""Ethernaut grader.
-
-Reads everything that varies — proxy address, from-block lower bound, the
-level address -> score map, the syllabus thresholds — from
-`assignments.config_json`. Hard-codes nothing about scoring. The professor
-overrides scores by editing config_json in Postgres; no redeploy needed.
-
-Algorithm:
-  1. Compute topic0 = keccak256("LevelCompletedLog(address,address,address)").
-  2. Build topic1 = 32-byte left-padded player address.
-  3. Paginate eth_getLogs in CHUNK_BLOCKS-block windows from config.from_block
-     up to current head, filtering [topic0, topic1, null, null] on the proxy.
-  4. For each matching log, take topic[3] (the level contract), look up the
-     score in config.level_scores (lowercased keys). Dedupe by level address.
-  5. raw_score = sum of level scores; capped = min(max_score, raw_score).
-     bonus = bonus_points if distinct_levels >= bonus_min_levels else 0.
-     total = capped + bonus. Final score is what we persist.
-
-Any RPC / decoding error returns GraderResult(status="error", ...). The
-route layer persists the error as an append-only grader_runs row — runs are
-never silently dropped.
+"""Ethernaut grader. Reads proxy address, from-block, level->score map, and
+thresholds from `assignments.config_json` — hard-codes nothing about scoring,
+so the professor overrides via SQL with no redeploy. RPC/decoding failures
+return status="error"; the route layer persists them as grader_runs rows.
 """
 from __future__ import annotations
 
@@ -32,7 +15,7 @@ from app.graders.base import GraderResult
 from app.web3_client import get_web3
 
 EVENT_SIGNATURE = "LevelCompletedLog(address,address,address)"
-CHUNK_BLOCKS = 50_000
+CHUNK_BLOCKS = 9_999
 DEFAULT_MAX_SCORE = 10
 DEFAULT_BONUS_POINTS = 4
 DEFAULT_BONUS_MIN_LEVELS = 15

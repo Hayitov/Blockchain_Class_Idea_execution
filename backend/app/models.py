@@ -48,8 +48,6 @@ class Assignment(Base):
 
 
 class AuthNonce(Base):
-    """Server-issued single-use nonce for SIWE. 5-minute TTL enforced in code."""
-
     __tablename__ = "auth_nonces"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
@@ -62,8 +60,6 @@ class AuthNonce(Base):
 
 
 class Sess(Base):
-    """Server-side session. Token is secrets.token_urlsafe(32). Indexed for O(log n) lookup."""
-
     __tablename__ = "sessions"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
@@ -76,8 +72,6 @@ class Sess(Base):
 
 
 class Submission(Base):
-    """A student's submission of an assignment. The grader_runs table holds outcomes."""
-
     __tablename__ = "submissions"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
@@ -100,7 +94,7 @@ class Submission(Base):
 
 
 class GraderRun(Base):
-    """APPEND-ONLY. Every grader execution gets a row. Never updated, never deleted."""
+    """APPEND-ONLY: every execution adds a row; never updated, never deleted."""
 
     __tablename__ = "grader_runs"
 

@@ -11,20 +11,13 @@ router = APIRouter(prefix="/api", tags=["health"])
 
 @router.get("/health")
 def health(db: Session = Depends(get_db)) -> JSONResponse:
-    """Smoke test for the whole stack.
-
-    Returns {"db": "ok", "rpc_block_number": N} on success.
-    Returns 503 with a per-component status if anything is down. Useful
-    for catching a missing/bad SEPOLIA_RPC_URL or a Postgres misconfig
-    before any business logic runs.
-    """
     body: dict[str, object] = {}
     healthy = True
 
     try:
         db.execute(text("SELECT 1"))
         body["db"] = "ok"
-    except Exception as exc:  # noqa: BLE001 — surface any DB error to the response
+    except Exception as exc:  # noqa: BLE001
         healthy = False
         body["db"] = f"error: {exc.__class__.__name__}: {exc}"
 

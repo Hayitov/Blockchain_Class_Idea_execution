@@ -1,9 +1,6 @@
-"""Shared FastAPI dependencies.
-
-Privacy invariant: `current_student` resolves the student row from the
-session cookie alone — never from a path or query parameter. This makes
-cross-student access structurally impossible at every endpoint that uses
-this dependency.
+"""Privacy invariant: `current_student` resolves the student row from the
+session cookie alone — never from a path or query parameter. Endpoints that
+depend on it cannot serve another student's data.
 """
 from __future__ import annotations
 

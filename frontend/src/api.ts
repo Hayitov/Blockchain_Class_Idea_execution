@@ -1,4 +1,3 @@
-// Always send cookies — same-origin via the Vite proxy in dev.
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const r = await fetch(path, {
     credentials: "include",

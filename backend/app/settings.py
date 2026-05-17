@@ -4,7 +4,6 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-# backend/.env lives next to pyproject.toml; keep settings self-contained.
 _BACKEND_DIR = Path(__file__).resolve().parents[1]
 
 

@@ -1,13 +1,6 @@
-"""SIWE auth endpoints.
-
-  POST /api/auth/nonce   { address }            -> { nonce, issued_at }
-  POST /api/auth/verify  { message, signature } -> sets cookie, returns { address, student }
-  POST /api/auth/logout                          -> clears cookie
-  GET  /api/auth/me                              -> { address, student }
-
-The verify endpoint consumes the nonce and creates the session row in a
-SINGLE transaction. A replayed nonce loses the race because the row is
-locked FOR UPDATE and `used_at` is set before commit.
+"""SIWE auth endpoints. Verify consumes the nonce and creates the session row in
+a single transaction (SELECT ... FOR UPDATE on the nonce), so a replayed nonce
+loses the race instead of producing a second session.
 """
 from __future__ import annotations
 
@@ -76,9 +69,6 @@ def verify(payload: VerifyRequest, response: Response, db: Session = Depends(get
 
     address = parsed.address_lower
 
-    # Atomic: lock the nonce row, validate, mark used, create session — all
-    # in one transaction. A second request with the same nonce blocks until
-    # we commit, then sees used_at != NULL and is rejected.
     nonce_row = db.execute(
         select(AuthNonce).where(AuthNonce.nonce == parsed.nonce).with_for_update()
     ).scalar_one_or_none()

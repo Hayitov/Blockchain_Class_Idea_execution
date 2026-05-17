@@ -1,11 +1,5 @@
-"""Submission + grader-run endpoints.
-
-Privacy invariant: every endpoint here resolves the student row from the
-session cookie via `current_student`. Path/query params NEVER carry a
-student id, so cross-student access is structurally impossible.
-
-The actual Ethernaut grader is wired in the next step. For now `_run_grader`
-returns a placeholder so the UI flow can be exercised end-to-end.
+"""Submission + grader-run endpoints. Every handler resolves the student via
+`current_student` (session cookie); path/query params never carry a student id.
 """
 from __future__ import annotations
 
@@ -41,7 +35,6 @@ def submit_assignment(
     db.add(submission)
     db.flush()  # populate submission.id without committing yet
 
-    # Dispatch by code so the grader registry stays explicit and easy to grep.
     if code == "assignment_2_ethernaut":
         result = ethernaut_grader.run(assignment.config_json, student.eth_address)
     else:

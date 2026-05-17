@@ -1,14 +1,8 @@
-"""Run the Ethernaut grader against a Sepolia address from the command line.
+"""Run the Ethernaut grader against a Sepolia address — bypasses auth and the
+submissions table. Reads `assignments.config_json` from the DB (seed first via
+`python tasks.py seed-map`) and SEPOLIA_RPC_URL from .env.
 
-Bypasses auth + the submissions table — useful for smoke-testing the grader
-itself against a known-active wallet before exercising the SIWE flow in
-the browser.
-
-Usage:
-    python -m scripts.run_grader_cli 0xYourAddress
-
-Reads `assignments.config_json` from the DB (must be seeded first via
-`make seed-map`) and the SEPOLIA_RPC_URL from .env.
+Usage: python -m scripts.run_grader_cli 0xYourAddress
 """
 from __future__ import annotations
 
@@ -33,7 +27,7 @@ def main(argv: list[str]) -> int:
         if a is None:
             print(
                 "assignment 'assignment_2_ethernaut' not found in DB. "
-                "Run `make seed-map` first."
+                "Run `python tasks.py seed-map` first."
             )
             return 1
         config = a.config_json

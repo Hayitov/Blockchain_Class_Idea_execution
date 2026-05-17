@@ -1,13 +1,4 @@
-"""Insert two sample students for local development.
-
-DO NOT run in production. Idempotent: upserts by eth_address.
-
-The professor will replace these with real addresses from the existing
-gradebook before the end-to-end test. Until then:
-
-  - student_active : an address that has solved a few Ethernaut levels
-  - student_empty  : the canonical zero-prefix address; expected score 0
-"""
+"""Local-dev only. Idempotent upsert (by eth_address) of sample student rows."""
 from __future__ import annotations
 
 from sqlalchemy.dialects.postgresql import insert
@@ -27,6 +18,12 @@ SAMPLE_STUDENTS: list[dict[str, str]] = [
         "name": "Sample Student (empty)",
         "student_id": "DEV-002",
         "github": "sample-empty",
+    },
+    {
+        "eth_address": "0x73c81a7749f57f3f6a966932907236a107522cc4",
+        "name": "Fahriddin Hayitov",
+        "student_id": "DEV-003",
+        "github": "fahriddin",
     },
 ]
 
