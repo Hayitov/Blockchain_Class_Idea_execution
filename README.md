@@ -149,3 +149,4 @@ Makefile    db-create / migrate / seed-map / seed-dev / api / web / test
 LLM judge, on-chain attestations / "Claude tokens", weekly hash anchor,
 graders for any other assignment, Telegram bot, production deployment, app
 Dockerfiles, professor-facing student-registration UI. See `CLAUDE.md`.
+# Blockchain_Class_Idea_execution
